@@ -1,4 +1,4 @@
-**xcode_compilation_db.py** creates compilation database compile_commands.json from Xcode projects.
+**xcode_compilation_db.py** creates [compilation database](http://clang.llvm.org/docs/JSONCompilationDatabase.html) compile_commands.json from Xcode projects.
 
 It uses the same approach as `scan-build` in [Clang Static Analyzer](http://clang-analyzer.llvm.org/).  I.e. it replaces C and C++ compilers with `c_interposer.py` and `c_interposer.py`.  Then it invokes `xcodebuild` and aforementioned scripts intercept and store compilation commands.  `xcode_compilation_db.py` is used the following way:
 
