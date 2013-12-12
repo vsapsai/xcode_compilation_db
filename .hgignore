@@ -1,0 +1,17 @@
+syntax: glob
+# Ignore Finder utility directory
+.DS_Store
+
+# Ignore build directory
+build*
+
+# Ignore personal Xcode settings
+**.pbxuser
+**.mode?v?
+**/xcuserdata/*
+
+# Ignore Vim helper files
+**.un~
+**.swp
+
+**.pyc
