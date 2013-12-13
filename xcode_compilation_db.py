@@ -16,6 +16,8 @@ CLANG_PATH_KEY = "COMPILATION_DB_CLANG_PATH"
 DB_FILENAME = "compile_commands.json"
 DB_PATH_KEY = "COMPILATION_DB_DATABASE_PATH"
 
+JSON_INDENT = 2
+
 # Used by compiler interposers.
 
 try:
@@ -45,7 +47,7 @@ def save_compiler_command(argv):
             # Rewrite file content.
             db_file.seek(0)
             db_file.truncate(0)
-            json.dump(db, db_file)
+            json.dump(db, db_file, indent=JSON_INDENT)
             # Write file to disk.
             db_file.flush()
             os.fsync(db_file.fileno())
@@ -105,7 +107,7 @@ def init_db_storage():
         sys.exit("{filename} already exists.".format(filename=DB_FILENAME))
     initial_db = []
     with open(compilation_db_path, "wt") as db_file:
-        json.dump(initial_db, db_file)
+        json.dump(initial_db, db_file, indent=JSON_INDENT)
     return compilation_db_path
 
 def setup_environment(db_path):
