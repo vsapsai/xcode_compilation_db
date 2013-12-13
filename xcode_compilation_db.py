@@ -34,6 +34,8 @@ def process_command(argv, is_cpp=False):
 
 def save_compiler_command(argv):
     record = compiler_command_to_db_record(argv)
+    if record is None:
+        return
     compilation_db_path = os.environ[DB_PATH_KEY]
     with open(compilation_db_path, "r+t") as db_file:
         # Lock file because Xcode compiles multiple files at once.
@@ -49,6 +51,9 @@ def save_compiler_command(argv):
             os.fsync(db_file.fileno())
 
 def compiler_command_to_db_record(argv):
+    """Create dictionary suitable for compile_commands.json from command-line arguments.
+
+    Returns None if isn't compiling an existing file."""
     # Prepare directory.
     current_directory = os.getcwd()
 
@@ -62,6 +67,8 @@ def compiler_command_to_db_record(argv):
             break
     assert file_path is not None, "Failed to find out compiled file."
     file_path = os.path.normpath(file_path)
+    if file_path == "/dev/null":
+        return None
     # Relative paths are preferred.  But only when file is within working directory.
     if os.path.isabs(file_path) and file_path.startswith(current_directory):
         file_path = os.path.relpath(file_path, current_directory)
