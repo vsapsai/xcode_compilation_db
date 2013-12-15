@@ -118,6 +118,7 @@ def setup_environment(db_path):
     os.environ[DB_PATH_KEY] = db_path
     clang_path = subprocess.check_output(
         ["xcrun", "-toolchain", "XcodeDefault", "-find", "clang"])
+    clang_path = clang_path.decode('utf-8')
     clang_path = clang_path.strip("\n")
     os.environ[CLANG_PATH_KEY] = clang_path
     # When 'CC' is set, xcodebuild uses it to do all linking.  Linking commands
