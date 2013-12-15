@@ -4,6 +4,7 @@ syntax: glob
 
 # Ignore build directory
 build*
+tests/TestProject/DerivedData*
 
 # Ignore personal Xcode settings
 **.pbxuser
