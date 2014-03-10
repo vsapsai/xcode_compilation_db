@@ -2,6 +2,7 @@
 
 # Actually, it is not a unit test, but integration test.
 
+import codecs
 import json
 import os
 import subprocess
@@ -29,10 +30,10 @@ class CompilationDatabaseRegressionTestCase(unittest.TestCase):
         self.create_compilation_database(test_project_directory, command_path)
         # Compare actual and expected compilation databases.
         expected_compilation_db = None
-        with open(os.path.join(test_project_directory, "compile_commands_expected.json"), "rt") as f:
+        with codecs.open(os.path.join(test_project_directory, "compile_commands_expected.json"), "r", "utf-8") as f:
             expected_compilation_db = json.load(f)
         actual_compilation_db = None
-        with open(os.path.join(test_project_directory, DB_FILENAME), "rt") as f:
+        with codecs.open(os.path.join(test_project_directory, DB_FILENAME), "r", "utf-8") as f:
             actual_compilation_db = json.load(f)
         self.assert_equal_compilation_db(expected_compilation_db, actual_compilation_db, test_project_directory)
 
@@ -53,7 +54,7 @@ class CompilationDatabaseRegressionTestCase(unittest.TestCase):
         for expected_record in expected_db:
             actual_record = actual_db_dict[expected_record["file"]]
             self.assertEqual(set(expected_record.keys()), set(actual_record.keys()), "Keys should be equal")
-            for key, value in expected_record.iteritems():
+            for key, value in expected_record.items():
                 value = value.replace("{{PROJECT_DIR}}", project_directory)
                 if key == "command":
                     if random_dir_part is None:

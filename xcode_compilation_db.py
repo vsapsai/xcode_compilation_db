@@ -82,9 +82,9 @@ def compiler_command_to_db_record(argv):
     assert argv == shlex.split(command), "Shell quoting doesn't round trip"
 
     record = {
-        "directory": current_directory.decode("utf-8"),
-        "command": command.decode("utf-8"),
-        "file": file_path.decode("utf-8")
+        "directory": decode_byte_sequence(current_directory, "utf-8"),
+        "command": decode_byte_sequence(command, "utf-8"),
+        "file": decode_byte_sequence(file_path, "utf-8")
     }
     return record
 
@@ -95,6 +95,11 @@ def lock_file(file_object):
         yield
     finally:
         fcntl.flock(file_object.fileno(), fcntl.LOCK_UN)
+
+def decode_byte_sequence(byte_sequence, encoding):
+    if hasattr(byte_sequence, "decode"):
+        return byte_sequence.decode(encoding)
+    return byte_sequence
 
 # Used by xcodebuild launcher
 
