@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import codecs
 import contextlib
 import fcntl
 import json
@@ -39,7 +40,7 @@ def save_compiler_command(argv):
     if record is None:
         return
     compilation_db_path = os.environ[DB_PATH_KEY]
-    with open(compilation_db_path, "r+t") as db_file:
+    with codecs.open(compilation_db_path, "r+", "utf-8") as db_file:
         # Lock file because Xcode compiles multiple files at once.
         with lock_file(db_file):
             db = json.load(db_file)
@@ -47,7 +48,7 @@ def save_compiler_command(argv):
             # Rewrite file content.
             db_file.seek(0)
             db_file.truncate(0)
-            json.dump(db, db_file, indent=JSON_INDENT)
+            json.dump(db, db_file, indent=JSON_INDENT, ensure_ascii=False)
             # Write file to disk.
             db_file.flush()
             os.fsync(db_file.fileno())
@@ -81,9 +82,9 @@ def compiler_command_to_db_record(argv):
     assert argv == shlex.split(command), "Shell quoting doesn't round trip"
 
     record = {
-        "directory": current_directory,
-        "command": command,
-        "file": file_path
+        "directory": current_directory.decode("utf-8"),
+        "command": command.decode("utf-8"),
+        "file": file_path.decode("utf-8")
     }
     return record
 
